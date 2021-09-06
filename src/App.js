@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import axios from 'axios';
+import { Component } from 'react';
 import './App.css';
+import Ccard from "./Component/Card";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state={
+    i:[]
+  }
+  test(){
+    axios.get('https://jsonplaceholder.typicode.com/posts')
+    .then(res=> {
+      let i=[];
+      for(let [id,data] of Object.entries(res.data)){
+        i.push({
+            userid: data.userId,
+            id: data.id,
+            title: data.title,
+            body: data.body,
+        });
+        this.setState({i});
+    }
+  })
+  }
+
+  componentDidMount(){
+    this.test();
+  }
+  render(){
+    return (
+      <div className="App">
+        {this.state.i.map(x=>(
+          <Ccard userid={x.userid} id={x.id} title={x.title} body={x.body}/>
+        ))}
+      </div>
+    );
+  }
 }
 
 export default App;
